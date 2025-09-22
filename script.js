@@ -138,8 +138,16 @@ window.addEventListener('load', () => {
     setTimeout(typeEffect, 1000); // Delay start for effect
 });
 
-// Form Submission
+// Form Submission (EmailJS only)
 const contactForm = document.querySelector('.contact-form');
+const CONTACT_EMAIL = 'rajkumarr11102003@gmail.com';
+const EMAILJS_PUBLIC_KEY = 'AIPOHNT1w9jMzdoAO'; // Configure
+const EMAILJS_SERVICE_ID = 'service_ho5745y'; // Configure
+const EMAILJS_TEMPLATE_ID = 'template_unsd77i'; // Configure
+
+const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
+};
 
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
@@ -149,45 +157,68 @@ if (contactForm) {
         const formData = new FormData(contactForm);
         const data = Object.fromEntries(formData);
 
+        // Basic validation
+        if (!data.name || !data.email || !data.message) {
+            alert('Please fill out all fields.');
+            return;
+        }
+        if (!isValidEmail(data.email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        // Block if opened via file:// (EmailJS requires http/https)
+        if (window.location.protocol === 'file:') {
+            alert('Please run this site via a local server (http://localhost) or deploy it. Email sending is blocked on file:// URLs.');
+            return;
+        }
+
+        // EmailJS only (no Formspree/mailto fallback)
+
         // Show loading state
         const submitBtn = contactForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML; // Use innerHTML to preserve icon
+        const originalText = submitBtn.innerHTML; // Keep icon
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
         try {
-            // Simulate API call
-            // Replace with actual form submission logic (e.g., fetch API)
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // 1) Try EmailJS if configured
+            const emailJsConfigured = EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.includes('REPLACE_') &&
+                                      EMAILJS_SERVICE_ID && !EMAILJS_SERVICE_ID.includes('REPLACE_') &&
+                                      EMAILJS_TEMPLATE_ID && !EMAILJS_TEMPLATE_ID.includes('REPLACE_');
 
-            // Show success message
-            const successMessage = document.createElement('div');
-            successMessage.className = 'success-message';
-            successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Message sent successfully!';
-            contactForm.appendChild(successMessage);
+            if (!window.emailjs) {
+                throw new Error('EmailJS SDK not loaded');
+            }
 
-            // Clear form
-            contactForm.reset();
+            if (emailJsConfigured) {
+                window.emailjs.init(EMAILJS_PUBLIC_KEY);
+                const result = await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                    from_name: data.name,
+                    from_email: data.email, // used as Reply-To in template
+                    message: data.message,
+                    to_email: CONTACT_EMAIL
+                });
 
-            // Remove success message after 3 seconds
-            setTimeout(() => {
-                successMessage.remove();
-            }, 3000);
-
+                if (result && result.status === 200) {
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'success-message';
+                    successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Message sent successfully!';
+                    contactForm.appendChild(successMessage);
+                    contactForm.reset();
+                    setTimeout(() => successMessage.remove(), 3000);
+                    return; // Done
+                }
+            }
+            throw new Error('Email service is not configured or failed. Check keys, service/template IDs, and allowed domains.');
         } catch (error) {
             console.error('Form submission error:', error);
-            // Show error message
             const errorMessage = document.createElement('div');
             errorMessage.className = 'error-message';
-            errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error sending message.';
+            const details = (error && (error.message || error.text || error.statusText)) ? ` (${error.message || error.text || error.statusText})` : '';
+            errorMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> Failed to send.${details}`;
             contactForm.appendChild(errorMessage);
-
-            // Remove error message after 3 seconds
-            setTimeout(() => {
-                errorMessage.remove();
-            }, 3000);
+            setTimeout(() => errorMessage.remove(), 3000);
         } finally {
-            // Reset button state
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
         }

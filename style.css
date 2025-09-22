@@ -327,8 +327,12 @@ nav ul {
 
 /* Modern Section Styles */
 .section-padding {
-    padding-top: 2rem;
-    padding-bottom: 22rem;
+    padding-top: 4rem;
+    padding-bottom: 38rem;
+}
+/* Remove extra space below contact section */
+#contact.section-padding {
+    padding-bottom: 5px;
 }
 
 .bg-light {
@@ -398,6 +402,12 @@ nav ul {
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: var(--transition);
+}
+
+/* Workshops section: lighten card background for contrast */
+#workshops .education-card {
+    background-color: var(--light-background);
+    border: 1px solid var(--border-color);
 }
 
 .education-card:hover {
@@ -805,6 +815,12 @@ nav ul {
     text-align: center;
 }
 
+.contact-bottom {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
 .contact-right {
     display: flex;
     flex-direction: column;
@@ -862,6 +878,7 @@ nav ul {
 
 .contact-details h3 {
     margin-bottom: 0.5rem;
+    text-align: center;
 }
 
 .contact-details p {
@@ -870,19 +887,20 @@ nav ul {
 
 .social-links-contact {
     display: flex;
-    flex-direction: row;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    justify-content: center;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 .social-links-contact .contact-item {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5rem;
     align-items: center;
     padding: 1rem;
-    border: 1px solid var(--border-color);
+    border: 0px solid var(--border-color);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
@@ -905,6 +923,7 @@ nav ul {
 
 .social-links-contact .social-details h3 {
     margin-bottom: 0;
+    color: white;
 }
 
 .social-links-contact .social-link {
@@ -933,6 +952,7 @@ nav ul {
 .contact-form {
     display: flex;
     flex-direction: column;
+    padding-top: 1.5rem;
     gap: 1.5rem;
 }
 
@@ -949,11 +969,11 @@ nav ul {
 .form-group input,
 .form-group textarea {
     width: 100%;
+    color: white;
     padding: 0.8rem;
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
     background-color: var(--light-background);
-    color: var(--text-color);
 }
 
 .form-group input:focus,
@@ -964,11 +984,23 @@ nav ul {
 }
 
 .form-group textarea {
-    height: 150px;
-    resize: vertical;
+    height: 65px;
+    resize: none;
 }
 
 /* Modern Footer */
+.site-footer {
+    background-color: var(--light-background);
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    margin-top: 13rem;
+    text-align: center;
+}
+
+.site-footer p {
+    color: var(--light-text);
+    font-size: 0.95rem;
+}
 
 
 /* Animations */
@@ -1169,12 +1201,12 @@ nav ul {
     }
 
     .social-links-contact {
-        flex-direction: row;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-        align-items: center;
-        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 0;
+        margin-bottom: 0;
+        flex-wrap: nowrap;
     }
 
     .social-links-contact .contact-item {
@@ -1327,20 +1359,21 @@ nav ul {
 @media (min-width: 769px) {
     .contact-container {
         grid-template-columns: 1fr;
-        gap: 4rem;
-        align-items: center;
+        gap: 2.5rem;
+        align-items: start;
         justify-content: center;
     }
 
-    .contact-info {
-        align-items: center;
-        text-align: center;
+    .contact-bottom { 
+        grid-template-columns: 1fr 2fr;
+        align-items: start;
+        gap: 1rem;
     }
 
     .contact-details-row {
         flex-direction: row;
         justify-content: center;
-        gap: 2rem;
+        gap: 7.5rem;
     }
 
     .contact-item {
@@ -1349,8 +1382,8 @@ nav ul {
     }
 
     .social-links-contact {
-        align-items: center;
-        justify-content: center;
+        align-items: flex-start;
+        justify-content: flex-start;
     }
 }
 
