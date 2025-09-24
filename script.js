@@ -141,9 +141,9 @@ window.addEventListener('load', () => {
 // Form Submission (EmailJS only)
 const contactForm = document.querySelector('.contact-form');
 const CONTACT_EMAIL = 'rajkumarr11102003@gmail.com';
-const EMAILJS_PUBLIC_KEY = 'AIPOHNT1w9jMzdoAO'; // Configure
-const EMAILJS_SERVICE_ID = 'service_ho5745y'; // Configure
-const EMAILJS_TEMPLATE_ID = 'template_unsd77i'; // Configure
+const EMAILJS_PUBLIC_KEY = 'AIPOHNT1w9jdfgfMzdoAO'; // Configure
+const EMAILJS_SERVICE_ID = 'service_ho574rgfg5y'; // Configure
+const EMAILJS_TEMPLATE_ID = 'template_4543unsd77i'; // Configure
 
 const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
